@@ -1,0 +1,5 @@
+name: RoidCore
+author: 'Pablo BD'
+description: 'Core to roid mc'
+version: BETA
+main: com.roidmc.core.RoidCore

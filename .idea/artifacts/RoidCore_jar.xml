@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RoidCore:jar">
+    <output-path>$USER_HOME$/Documents/Minecraft Servers/Roid - Rankup/plugins</output-path>
+    <root id="archive" name="RoidCore.jar">
+      <element id="module-output" name="RoidCore" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+    </root>
+  </artifact>
+</component>
