@@ -2,12 +2,22 @@ package com.roidmc.core;
 
 import com.roidmc.core.api.RoidService;
 import com.roidmc.core.api.command.RoidCommandService;
-import com.roidmc.core.api.economy.RoidEconomyService;
+import com.roidmc.core.api.economy.RoidSavingsService;
 import com.roidmc.core.api.hologram.RoidHologramsService;
 import com.roidmc.core.api.item.RoidItemsService;
+import com.roidmc.core.api.listeners.RoidListenerService;
 import com.roidmc.core.api.message.RoidMessageService;
+import com.roidmc.core.api.reset.RoidReset;
+import com.roidmc.core.api.reset.RoidResetService;
+import com.roidmc.core.listeners.InventoryListener;
+import com.roidmc.core.listeners.PluginListener;
+import com.roidmc.core.monitor.SimpleChatMonitor;
+import com.roidmc.core.util.Debug;
+import com.roidmc.core.util.Progress;
 import com.roidmc.core.util.java.Environment;
 import com.roidmc.core.util.Translate;
+import com.roidmc.core.util.java.ZipCompress;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -19,15 +29,16 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
 
     static List<RoidPlugin> roidPlugins = new ArrayList<>();
     static List<RoidService<?>> services = new ArrayList<>();
-    static DevMode devMode;
+    static DevMode devMode = new DevMode(true);
 
     @Override
     public void onLoad() {
         instance=this;
+        Debug.init();
         devMode.liveReload(true);
         Environment.load();
         Translate.loadMessages();
-        registerService(RoidEconomyService.inst);
+        registerService(RoidSavingsService.inst);
         registerService(RoidMessageService.inst);
         registerService(RoidHologramsService.inst);
         registerService(RoidItemsService.inst);
@@ -39,16 +50,23 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
     @Override
     public void onEnable() {
         RoidCommandService.getInstance().init();
+        RoidCommandService.getInstance().load(this);
         for(RoidPlugin roidPlugin : roidPlugins){
             roidPlugin.onStart();
+            RoidCommandService.getInstance().load(roidPlugin);
         }
+        RoidListenerService.load(this);
+        Bukkit.getPluginManager().registerEvents(new PluginListener(),this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(),this);
     }
 
     @Override
     public void onDisable() {
-        for(RoidPlugin roidPlugin : roidPlugins){
-            roidPlugin.onStart();
+        for(RoidPlugin roidPlugin : new ArrayList<>(roidPlugins)){
+            roidPlugin.onShutdown();
+            RoidCommandService.getInstance().unLoad(roidPlugin);
         }
+        RoidHologramsService.inst.removeAll();
         devMode.liveReload(false);
     }
 
@@ -91,13 +109,37 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
     }
 
     public static void registerPlugin(RoidPlugin roidPlugin){
-        RoidCommandService.getInstance().load(roidPlugin);
+        for (RoidPlugin plugin : new ArrayList<>(roidPlugins)){
+            if(plugin.getName().equalsIgnoreCase(roidPlugin.getName())){
+                unRegisterPlugin(plugin);
+            }
+        }
         roidPlugins.add(roidPlugin);
     }
 
     public static void unRegisterPlugin(RoidPlugin roidPlugin){
         RoidCommandService.getInstance().unLoad(roidPlugin);
+        RoidListenerService.unLoad(roidPlugin);
         roidPlugins.remove(roidPlugin);
+    }
+
+    public static List<RoidPlugin> getPlugins() {
+        return new ArrayList<>(roidPlugins);
+    }
+
+    public RoidResetService resetServer(){
+        RoidResetService resetService = new RoidResetService() {
+            @Override
+            public void onReset(String title, Progress runtimeProgress) {
+
+            }
+        };
+        resetService.start();
+        return resetService;
+    }
+
+    public RoidReset reset() {
+        return null;
     }
 
     private static RoidCore instance;
@@ -108,7 +150,6 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
 
     {
         instance = this;
-        devMode = new DevMode(this);
     }
 
     public <T> RoidService<T> getService(String name){
@@ -129,8 +170,8 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
         services.add(service);
     }
 
-    public RoidEconomyService getEconomyService() {
-        return RoidEconomyService.inst;
+    public RoidSavingsService getEconomyService() {
+        return RoidSavingsService.inst;
     }
 
     public RoidMessageService getMessageService() {
@@ -150,6 +191,13 @@ public class RoidCore extends JavaPlugin implements RoidPlugin{
     @Override
     public void onShutdown() {
 
+    }
+
+    public RoidPlugin getPlugin(String name){
+        for(RoidPlugin roidPlugin: roidPlugins){
+            if(roidPlugin.getName().equalsIgnoreCase(name))return roidPlugin;
+        }
+        return null;
     }
 
     @Override

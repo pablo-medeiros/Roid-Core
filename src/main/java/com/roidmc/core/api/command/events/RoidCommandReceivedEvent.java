@@ -7,7 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class FCommandReceivedEvent extends Event implements Cancellable {
+public class RoidCommandReceivedEvent extends Event implements Cancellable {
 
     private static final HandlerList handlerList = new HandlerList();
 
@@ -18,7 +18,7 @@ public class FCommandReceivedEvent extends Event implements Cancellable {
     private boolean isPlayer;
     private boolean isConsole;
 
-    public FCommandReceivedEvent(String name, String[] args, CommandSender sender) {
+    public RoidCommandReceivedEvent(String name, String[] args, CommandSender sender) {
         this.name = name.toLowerCase();
         this.args = args;
         this.sender = sender;

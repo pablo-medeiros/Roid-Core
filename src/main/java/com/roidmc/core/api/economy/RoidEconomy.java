@@ -1,5 +1,6 @@
 package com.roidmc.core.api.economy;
 
+import com.roidmc.core.api.RoidService;
 import com.roidmc.core.util.RoidCache;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

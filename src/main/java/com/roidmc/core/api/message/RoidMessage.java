@@ -3,6 +3,7 @@ package com.roidmc.core.api.message;
 import com.roidmc.core.RoidCore;
 import com.roidmc.core.util.Translate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,7 @@ public class RoidMessage {
 
     public String[] translate(Locale locale){
         if(defaultLocale==null)return null;
-        return messages.getOrDefault(locale.getLanguage(),messages.get(defaultLocale.getLanguage()));
+        return messages.getOrDefault(locale.getLanguage(),messages.getOrDefault(locale.getLanguage().split("_")[0],messages.get(defaultLocale.getLanguage())));
     }
     public String[] translate(CommandSender target){
         return translate(Translate.getLocale(target));
@@ -38,7 +39,7 @@ public class RoidMessage {
         send(Bukkit.getConsoleSender());
     }
     public void send(CommandSender target){
-        target.sendMessage(translate(target));
+        target.sendMessage(Arrays.stream(translate(target)).map(s->ChatColor.translateAlternateColorCodes('&',s)).toArray(String[]::new));
     }
 
     public void send(CommandSender[] targets){

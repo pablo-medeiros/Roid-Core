@@ -24,12 +24,26 @@ public class RoidSlot {
         return this;
     }
 
-    public void onClick(Consumer<RoidInventoryAction> roidInventoryActionConsumer){
+    public ItemStack getDisplay() {
+        return display;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
+    public void destroy(){
+        actions.clear();
+        setDisplay(null);
+    }
+
+    public RoidSlot onClick(Consumer<RoidInventoryAction> roidInventoryActionConsumer){
         this.actions.add(roidInventoryActionConsumer);
+        return this;
     }
 
     protected void handleClick(RoidInventoryAction roidInventoryAction){
-        for(Consumer<RoidInventoryAction> consumer : actions){
+        for(Consumer<RoidInventoryAction> consumer : new ArrayList<>(actions)){
             consumer.accept(roidInventoryAction);
         }
     }

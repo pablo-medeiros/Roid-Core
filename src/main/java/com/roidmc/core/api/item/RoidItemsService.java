@@ -1,8 +1,6 @@
 package com.roidmc.core.api.item;
 
 import com.roidmc.core.api.RoidService;
-import com.roidmc.core.api.hologram.RoidHolograms;
-import com.roidmc.core.api.hologram.RoidHologramsService;
 import com.roidmc.core.util.Debug;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +10,7 @@ import java.util.List;
 
 public class RoidItemsService implements RoidService<RoidItem> {
 
-    public static final RoidHologramsService inst = new RoidHologramsService();
+    public static final RoidItemsService inst = new RoidItemsService();
 
     private List<RoidItem> items = new ArrayList<>();
 
@@ -47,23 +45,24 @@ public class RoidItemsService implements RoidService<RoidItem> {
             int finalData = data;
             return new RoidItem() {
                 @Override
-                String getId() {
+                public String getId() {
                     return key;
                 }
 
                 @Override
-                ItemStack create(int amount) {
+                public ItemStack create(int amount) {
                     return new ItemStack(finalId,amount, (short) finalData);
                 }
 
                 @Override
-                boolean isSimilar(ItemStack itemStack) {
+                public boolean isSimilar(ItemStack itemStack) {
                     return itemStack!=null&&itemStack.getType()==finalId&&itemStack.getDurability()==finalData;
                 }
             };
         }
         return null;
     }
+
 
     @Override
     public String name() {

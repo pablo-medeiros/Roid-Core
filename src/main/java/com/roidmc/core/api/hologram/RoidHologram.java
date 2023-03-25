@@ -38,7 +38,7 @@ public abstract class RoidHologram {
         }
     }
 
-    private void summon(Location location){
+    private synchronized void summon(Location location){
         stand = location.getWorld().spawn(location,ArmorStand.class);
         stand.setSmall(true);
         stand.setGravity(false);

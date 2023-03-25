@@ -19,8 +19,8 @@ public abstract class RoidHolograms {
         this.name = name;
     }
 
-    abstract RoidPlugin getOwner();
-    abstract String[] getLines();
+    public abstract RoidPlugin getOwner();
+    public abstract String[] getLines();
 
     protected List<RoidHologram> getOriginalHolograms(){
         return holograms;
@@ -55,7 +55,7 @@ public abstract class RoidHolograms {
         }
     }
 
-    List<RoidHologram> getHolograms(){
+    public List<RoidHologram> getHolograms(){
         return new ArrayList<>(holograms);
     }
 

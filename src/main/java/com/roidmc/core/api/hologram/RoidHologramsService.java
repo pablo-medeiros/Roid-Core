@@ -31,6 +31,10 @@ public class RoidHologramsService implements RoidService<RoidHolograms> {
         return null;
     }
 
+    public void removeAll() {
+        holograms.forEach(RoidHolograms::remove);
+    }
+
     @Override
     public String name() {
         return "holograms";

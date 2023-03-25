@@ -1,9 +1,12 @@
 package com.roidmc.core.api.message;
 
+import com.roidmc.core.RoidCore;
 import com.roidmc.core.api.RoidService;
 import com.roidmc.core.util.Debug;
 
+import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RoidMessageService implements RoidService<RoidMessage> {

@@ -9,7 +9,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class FCommandPreprocessEvent  extends Event implements Cancellable {
+public class RoidCommandPreprocessEvent extends Event implements Cancellable {
 
     private static final HandlerList handlerList = new HandlerList();
 
@@ -22,15 +22,15 @@ public class FCommandPreprocessEvent  extends Event implements Cancellable {
     private boolean isPlayer;
     private boolean isConsole;
 
-    public FCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommandGroup group) {
+    public RoidCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommandGroup group) {
         this(name,args,sender,null,group);
     }
 
-    public FCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommand roidCommand) {
+    public RoidCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommand roidCommand) {
         this(name,args,sender, roidCommand,null);
     }
 
-    public FCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommand roidCommand, RoidCommandGroup group) {
+    public RoidCommandPreprocessEvent(String name, String[] args, CommandSender sender, RoidCommand roidCommand, RoidCommandGroup group) {
         this.name = name.toLowerCase();
         this.args = args;
         this.sender = sender;

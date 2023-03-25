@@ -1,6 +1,6 @@
 package com.roidmc.core.api.command;
 
-import com.roidmc.core.api.command.events.FCommandReceivedEvent;
+import com.roidmc.core.api.command.events.RoidCommandReceivedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -29,7 +29,7 @@ public class RoidCommandListener implements Listener {
 
     private boolean sendEvent(CommandSender sender, String message){
         String[] spl = message.split(" ");
-        FCommandReceivedEvent fCommandReceivedEvent = new FCommandReceivedEvent(spl[0], Arrays.copyOfRange(spl,1,spl.length), sender);
+        RoidCommandReceivedEvent fCommandReceivedEvent = new RoidCommandReceivedEvent(spl[0], Arrays.copyOfRange(spl,1,spl.length), sender);
         Bukkit.getPluginManager().callEvent(fCommandReceivedEvent);
         return fCommandReceivedEvent.isCancelled();
     }

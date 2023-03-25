@@ -2,14 +2,13 @@ package com.roidmc.core.api.economy;
 
 import com.roidmc.core.api.RoidService;
 import com.roidmc.core.util.Debug;
-import com.sun.istack.internal.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class RoidEconomyService implements RoidService<RoidEconomy> {
+public class RoidSavingsService implements RoidService<RoidEconomy> {
 
-    public static final RoidEconomyService inst = new RoidEconomyService();
+    public static final RoidSavingsService inst = new RoidSavingsService();
 
     private final Map<String, RoidEconomy> ECONOMIES = new LinkedHashMap<>();
     public static final String MONEY = "money";

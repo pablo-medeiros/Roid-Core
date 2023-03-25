@@ -2,12 +2,12 @@ package com.roidmc.core.api.command;
 
 import com.roidmc.core.RoidCore;
 import com.roidmc.core.RoidPlugin;
-import com.roidmc.core.api.command.events.FCommandPreprocessEvent;
-import com.roidmc.core.api.command.events.FCommandReceivedEvent;
+import com.roidmc.core.api.command.events.RoidCommandPreprocessEvent;
+import com.roidmc.core.api.command.events.RoidCommandReceivedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -36,7 +36,7 @@ public class RoidCommandService {
             }
         }
         for(RoidCMDInfo info : this.commands){
-            if(info.roidCommand.name().equalsIgnoreCase(name)|info.aliases.contains(name))return info;
+            if(info.roidCommand.name().equalsIgnoreCase(name)||info.aliases.contains(name))return info;
         }
         return null;
     }
@@ -84,8 +84,8 @@ public class RoidCommandService {
         Bukkit.getPluginManager().registerEvents(new RoidCommandListener(), RoidCore.getInstance());
         Bukkit.getPluginManager().registerEvents(new Listener() {
 
-            @EventHandler
-            public void onCommandReceived(FCommandReceivedEvent e){
+            @EventHandler(priority = EventPriority.HIGHEST)
+            public void onCommandReceived(RoidCommandReceivedEvent e){
                 RoidCommandInfo info = find(e.getName(),e.getArguments());
                 if(info!=null) {
                     String name = "";
@@ -97,7 +97,7 @@ public class RoidCommandService {
                     } else {
                         args = e.getArguments();
                     }
-                    FCommandPreprocessEvent fCommandPreprocessEvent = new FCommandPreprocessEvent(
+                    RoidCommandPreprocessEvent fCommandPreprocessEvent = new RoidCommandPreprocessEvent(
                             name, args, e.getSender(), info.getCommand(), info.getCommandGroup()
                     );
                     Bukkit.getPluginManager().callEvent(fCommandPreprocessEvent);
@@ -131,8 +131,11 @@ public class RoidCommandService {
             while (enumeration.hasMoreElements()){
                 JarEntry entry = enumeration.nextElement();
                 if(entry.getName().endsWith(".class")){
-                    Class<?> clazz = Class.forName(entry.getName().substring(0,entry.getName().length()-6).replace("/","."));
-                    list.add(clazz);
+                    try {
+                        Class<?> clazz = Class.forName(entry.getName().substring(0, entry.getName().length() - 6).replace("/", "."));
+                        list.add(clazz);
+                    }catch (Exception ignored){
+                    }
                 }
             }
         } catch (Exception e) {
